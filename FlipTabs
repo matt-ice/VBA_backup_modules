@@ -1,48 +1,48 @@
 Sub FlipTab_core(Optional ByVal skipCount As Integer = 1, Optional ByVal direction As Boolean = True)
-Dim shIndex As Integer, shTotal As Byte
-
-shTotal = ActiveWorkbook.Sheets.Count
-shIndex = ActiveSheet.Index
-
-'if going forwards and at the end, prepare variables to select first sheet
-If direction = True Then
-    If shIndex + skipCount > shTotal Then
-        shIndex = 0
-        skipCount = 1
+    Dim shIndex As Integer, shTotal As Byte
+    
+    shTotal = ActiveWorkbook.Sheets.Count
+    shIndex = ActiveSheet.Index
+    
+    'if going forwards and at the end, prepare variables to select first sheet
+    If direction = True Then
+        If shIndex + skipCount > shTotal Then
+            shIndex = 0
+            skipCount = 1
+        End If
     End If
-End If
-
-'if going backwards, prepare variables to select last sheet
-If direction = False Then
-    If shIndex - skipCount <= 0 Then
-        shIndex = shTotal + 1
+    
+    'if going backwards, prepare variables to select last sheet
+    If direction = False Then
+        If shIndex - skipCount <= 0 Then
+            shIndex = shTotal + 1
+        End If
     End If
-End If
-
-Select Case direction
-Case True:
-    If Sheets(shIndex + skipCount).Visible = False Then
-        Call FlipTab_core(skipCount + 1)
-    Else
-        Sheets(shIndex + skipCount).Activate
-        Exit Sub
-    End If
-Case False:
-    If Sheets(shIndex - skipCount).Visible = False Then
-        Call FlipTab_core(skipCount + 1, False)
-    Else
-        Sheets(shIndex - skipCount).Activate
-        Exit Sub
-    End If
-End Select
+    
+    Select Case direction
+        Case True:
+            If Sheets(shIndex + skipCount).Visible = False Then
+                Call FlipTab_core(skipCount + 1)
+            Else
+                Sheets(shIndex + skipCount).Activate
+                Exit Sub
+            End If
+        Case False:
+            If Sheets(shIndex - skipCount).Visible = False Then
+                Call FlipTab_core(skipCount + 1, False)
+            Else
+                Sheets(shIndex - skipCount).Activate
+                Exit Sub
+            End If
+    End Select
 End Sub
 
 Sub FlipTab()
-'Shortcut Ctrl+Q
-Call FlipTab_core(1, 1)
+    'Shortcut Ctrl+Q
+    Call FlipTab_core(1, 1)
 End Sub
 
 Sub BackFlipTab()
-'Shortcut Ctrl+Shift+Q
-Call FlipTab_core(1, 0)
+    'Shortcut Ctrl+Shift+Q
+    Call FlipTab_core(1, 0)
 End Sub

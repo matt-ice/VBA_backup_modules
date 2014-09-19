@@ -1,3 +1,14 @@
+Sub FlipTab()
+    'Shortcut Ctrl+Q
+    Call FlipTab_core(1, 1)
+End Sub
+
+Sub BackFlipTab()
+    'Shortcut Ctrl+Shift+Q
+    Call FlipTab_core(1, 0)
+End Sub
+
+
 Sub FlipTab_core(Optional ByVal skipCount As Integer = 1, Optional ByVal direction As Boolean = True)
     Dim shIndex As Integer, shTotal As Byte
     
@@ -37,12 +48,4 @@ Sub FlipTab_core(Optional ByVal skipCount As Integer = 1, Optional ByVal directi
     End Select
 End Sub
 
-Sub FlipTab()
-    'Shortcut Ctrl+Q
-    Call FlipTab_core(1, 1)
-End Sub
 
-Sub BackFlipTab()
-    'Shortcut Ctrl+Shift+Q
-    Call FlipTab_core(1, 0)
-End Sub

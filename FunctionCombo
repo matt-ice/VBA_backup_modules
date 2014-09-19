@@ -1,0 +1,26 @@
+Private WithEvents btnTrimmer As MSForms.CommandButton
+
+Private Sub UserForm_Initialize()
+Set btnTrimmer = FunctionCombo.Controls.Add("Forms.CommandButton.1", "btnTrim")
+btnTrimmer.Caption = "Trim selection"
+btnTrimmer.Accelerator = "t"
+FunctionCombo.Caption = "Useful functions"
+
+End Sub
+
+Private Sub btnTrimmer_Click()
+Dim rngTrimmed As Range
+
+If Selection.Cells.Count > 1 Then
+    For Each c In Selection
+        If c.HasFormula = False Then c.Value = Application.WorksheetFunction.Trim(c)
+    Next
+Else
+    For Each c In ActiveSheet.UsedRange
+        If c.HasFormula = False Then c.Value = Application.WorksheetFunction.Trim(c)
+    Next
+End If
+
+FunctionCombo.Hide
+
+End Sub

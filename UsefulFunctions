@@ -1,0 +1,96 @@
+Sub UsefulLauncher()
+    'Shortcut Ctrl+Shift+U
+    Dim testForm As Object
+    
+    'testing if userform exists
+    On Error Resume Next
+    Set testForm = FunctionCombo
+    
+    'if userform doesn't exist, create it
+    If testForm Is Nothing Then Call createForm
+    FunctionCombo.Show
+    Unload testForm
+End Sub
+
+Sub createForm()
+    Dim newForm As Object
+    Set newForm = ThisWorkbook.VBProject.VBComponents.Add(vbext_ct_MSForm)
+    
+    'get code for form
+    codeString = getBigString
+    newForm.Name = "FunctionCombo"
+    
+    'populate form's code
+    newForm.codemodule.AddFromString (codeString)
+End Sub
+
+Function getBigString() As String
+    Dim bigString As String
+    bigString = ""
+    bigString = bigString & "Private WithEvents btnTrimmer As MSForms.CommandButton" & vbCr
+    bigString = bigString & "Private WithEvents btnRestore As MSForms.CommandButton" & vbCr
+    bigString = bigString & "Private WithEvents btnClose As MSForms.CommandButton" & vbCr
+    bigString = bigString & "" & vbCr
+    bigString = bigString & "Private Sub btnTrimmer_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)" & vbCr
+    bigString = bigString & "Select Case KeyCode" & vbCr
+    bigString = bigString & "    Case 82:" & vbCr
+    bigString = bigString & "        btnRestore_Click" & vbCr
+    bigString = bigString & "    Case 84:" & vbCr
+    bigString = bigString & "        btnTrimmer_Click" & vbCr
+    bigString = bigString & "End Select" & vbCr
+    bigString = bigString & "End Sub" & vbCr
+    bigString = bigString & "" & vbCr
+    bigString = bigString & "Private Sub UserForm_Activate()" & vbCr
+    bigString = bigString & "FunctionCombo.Height = (FunctionCombo.Controls.Count) * (btnTrimmer.Height)" & vbCr
+    bigString = bigString & "FunctionCombo.Width = btnTrimmer.Width + 50" & vbCr
+    bigString = bigString & "End Sub" & vbCr
+    bigString = bigString & "" & vbCr
+    bigString = bigString & "Private Sub UserForm_Initialize()" & vbCr
+    bigString = bigString & "FunctionCombo.Caption = ""Useful functions"" & vbCr"
+    bigString = bigString & "" & vbCr
+    bigString = bigString & "Set btnTrimmer = FunctionCombo.Controls.Add(""Forms.CommandButton.1"", ""btnTrim"")" & vbCr
+    bigString = bigString & "btnTrimmer.Caption = ""Trim selection""" & vbCr
+    bigString = bigString & "" & vbCr
+    bigString = bigString & "Set btnRestore = FunctionCombo.Controls.Add(""Forms.CommandButton.1"", ""btnRest"")" & vbCr
+    bigString = bigString & "btnRestore.Caption = ""Restore functionality""" & vbCr
+    bigString = bigString & "btnRestore.Top = btnRestore.Top + btnTrimmer.Height" & vbCr
+    bigString = bigString & "" & vbCr
+    bigString = bigString & "Set btnClose = FunctionCombo.Controls.Add(""Forms.CommandButton.1"", ""btnClose"")" & vbCr
+    bigString = bigString & "btnClose.Height = 0" & vbCr
+    bigString = bigString & "btnClose.Width = 0" & vbCr
+    bigString = bigString & "btnClose.Cancel = True" & vbCr
+    bigString = bigString & "" & vbCr
+    bigString = bigString & "btnTrimmer.SetFocus" & vbCr
+    bigString = bigString & "End Sub" & vbCr
+    bigString = bigString & "" & vbCr
+    bigString = bigString & "Private Sub btnTrimmer_Click()" & vbCr
+    bigString = bigString & "Dim rngTrimmed As Range" & vbCr
+    bigString = bigString & "If Selection.Cells.Count > 1 Then" & vbCr
+    bigString = bigString & "    For Each c In Selection" & vbCr
+    bigString = bigString & "        If c.HasFormula = False Then c.Value = Application.WorksheetFunction.Trim(c)" & vbCr
+    bigString = bigString & "    Next" & vbCr
+    bigString = bigString & "Else" & vbCr
+    bigString = bigString & "    For Each c In ActiveSheet.UsedRange" & vbCr
+    bigString = bigString & "        If c.HasFormula = False Then c.Value = Application.WorksheetFunction.Trim(c)" & vbCr
+    bigString = bigString & "    Next" & vbCr
+    bigString = bigString & "End If" & vbCr
+    bigString = bigString & "FunctionCombo.Hide" & vbCr
+    bigString = bigString & "End Sub" & vbCr
+    bigString = bigString & "" & vbCr
+    bigString = bigString & "Private Sub btnRestore_Click()" & vbCr
+    bigString = bigString & "With Application" & vbCr
+    bigString = bigString & "    .ScreenUpdating = True" & vbCr
+    bigString = bigString & "    .Calculation = xlCalculationAutomatic" & vbCr
+    bigString = bigString & "    .EnableEvents = True" & vbCr
+    bigString = bigString & "    .Interactive = True" & vbCr
+    bigString = bigString & "End With" & vbCr
+    bigString = bigString & "" & vbCr
+    bigString = bigString & "FunctionCombo.Hide" & vbCr
+    bigString = bigString & "End Sub" & vbCr
+    bigString = bigString & "" & vbCr
+    bigString = bigString & "Private Sub btnClose_Click()" & vbCr
+    bigString = bigString & "Unload Me" & vbCr
+    bigString = bigString & "End Sub" & vbCr
+getBigString = bigString
+End Function
+

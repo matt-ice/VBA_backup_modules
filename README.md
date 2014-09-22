@@ -3,9 +3,10 @@ VBA_backup_modules
 
 Backup modules/procedures for VBA
 
-FlipTab for going forward one tab       (Ctrl+Q)  
-BackFlipTab for going backward one tab  (Ctrl+Shift+Q)
-
+Tab cycle:  
+  -FlipTab for going forward one tab       (Ctrl+Q)  
+  -BackFlipTab for going backward one tab  (Ctrl+Shift+Q)  
+  -Both functions cycle through the sheets (don't stop once they reach the last/first sheet) 
 
 Useful Launcher (Ctrl+Shift+U)  
   -Required Microsoft Visual Basic for Application Extensibility library  

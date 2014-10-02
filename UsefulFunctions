@@ -8,115 +8,27 @@ Sub UsefulLauncher()
     
     'if userform doesn't exist, create it
     If testForm Is Nothing Then Call createForm
-    FunctionCombo.Show
-    Unload testForm
+    FunctionCombo.Show (False)
 End Sub
 
-Sub createForm()
+Private Sub createForm()
+'Only launched if the userform is not present in the project
     Dim newForm As Object
     Set newForm = ThisWorkbook.VBProject.VBComponents.Add(vbext_ct_MSForm)
     
     'get code for form
     codeString = getBigString
-    newForm.Name = "FunctionCombo"
+    newForm.name = "FunctionCombo"
     
     'populate form's code
     newForm.codemodule.AddFromString (codeString)
 End Sub
 
-Function getBigString() As String
+Private Function getBigString()
+    Dim FSO As Object
+    Dim file As Object
     Dim bigString As String
-    bigString = ""
-    bigString = bigString & "Private WithEvents var As MSForms.CommandButton" & vbCr
-    bigString = bigString & "Private WithEvents btnTrimmer As MSForms.CommandButton" & vbCr
-    bigString = bigString & "Private WithEvents btnRestore As MSForms.CommandButton" & vbCr
-    bigString = bigString & "Private WithEvents btnHyperLink As MSForms.CommandButton" & vbCr
-    bigString = bigString & "Private WithEvents btnClose As MSForms.CommandButton" & vbCr
-    bigString = bigString & "Private WithEvents btnTextLink As MSForms.CommandButton" & vbCr
-    bigString = bigString & "" & vbCr
-    bigString = bigString & "Private Sub UserForm_Activate()" & vbCr
-    bigString = bigString & "    FunctionCombo.Height = (FunctionCombo.Controls.Count) * (btnTrimmer.Height)" & vbCr
-    bigString = bigString & "    FunctionCombo.Width = btnTrimmer.Width" & vbCr
-    bigString = bigString & "End Sub" & vbCr
-    bigString = bigString & "" & vbCr
-    bigString = bigString & "Private Sub UserForm_Initialize()" & vbCr
-    bigString = bigString & "    FunctionCombo.Caption = ""UseFun"" " & vbCr
-    bigString = bigString & "    " & vbCr
-    bigString = bigString & "    Set btnTrimmer = createBtn(""btnTrim"", ""Trim selection"", 0)" & vbCr
-    bigString = bigString & "    Set btnRestore = createBtn(""btnRest"", ""Restore Blocks"", 1)" & vbCr
-    bigString = bigString & "    Set btnHyperLink = createBtn(""btnHyper"", ""Text to Link"", 2)" & vbCr
-    bigString = bigString & "    Set btnTextLink = createBtn(""btnText"", ""Link to Text"", 3)" & vbCr
-    bigString = bigString & "    " & vbCr
-    bigString = bigString & "    Set btnClose = FunctionCombo.Controls.Add(""Forms.CommandButton.1"", ""btnClose"")" & vbCr
-    bigString = bigString & "    btnClose.Height = 0" & vbCr
-    bigString = bigString & "    btnClose.Width = 0" & vbCr
-    bigString = bigString & "    btnClose.Cancel = True" & vbCr
-    bigString = bigString & "    " & vbCr
-    bigString = bigString & "    btnTrimmer.SetFocus" & vbCr
-    bigString = bigString & "End Sub" & vbCr
-    bigString = bigString & "" & vbCr
-    bigString = bigString & "Private Function createBtn(name As String, cap As String, position As Integer) As MSForms.CommandButton" & vbCr
-    bigString = bigString & "    Set var = FunctionCombo.Controls.Add(""Forms.CommandButton.1"", name)" & vbCr
-    bigString = bigString & "    var.Caption = cap" & vbCr
-    bigString = bigString & "    var.Top = 24 * position" & vbCr
-    bigString = bigString & "    Set createBtn = var" & vbCr
-    bigString = bigString & "End Function" & vbCr
-    bigString = bigString & "" & vbCr
-    bigString = bigString & "Private Sub btnTrimmer_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)" & vbCr
-    bigString = bigString & "Select Case KeyCode" & vbCr
-    bigString = bigString & "    Case 82:" & vbCr
-    bigString = bigString & "        btnRestore_Click" & vbCr
-    bigString = bigString & "    Case 84:" & vbCr
-    bigString = bigString & "        btnTrimmer_Click" & vbCr
-    bigString = bigString & "    Case 72:" & vbCr
-    bigString = bigString & "        btnHyperLink_Click" & vbCr
-    bigString = bigString & "    Case 88:" & vbCr
-    bigString = bigString & "        btnTextLink_Click" & vbCr
-    bigString = bigString & "End Select" & vbCr
-    bigString = bigString & "End Sub" & vbCr
-    bigString = bigString & "" & vbCr
-    bigString = bigString & "Private Sub btnTrimmer_Click()" & vbCr
-    bigString = bigString & "If Selection.Cells.Count > 1 Then" & vbCr
-    bigString = bigString & "    For Each c In Selection" & vbCr
-    bigString = bigString & "        If c.HasFormula = False Then c.Value = Application.WorksheetFunction.Trim(c)" & vbCr
-    bigString = bigString & "    Next" & vbCr
-    bigString = bigString & "Else" & vbCr
-    bigString = bigString & "    For Each c In ActiveSheet.UsedRange" & vbCr
-    bigString = bigString & "        If c.HasFormula = False Then c.Value = Application.WorksheetFunction.Trim(c)" & vbCr
-    bigString = bigString & "    Next" & vbCr
-    bigString = bigString & "End If" & vbCr
-    bigString = bigString & "Unload Me" & vbCr
-    bigString = bigString & "End Sub" & vbCr
-    bigString = bigString & "" & vbCr
-    bigString = bigString & "Private Sub btnRestore_Click()" & vbCr
-    bigString = bigString & "With Application" & vbCr
-    bigString = bigString & "    .ScreenUpdating = True" & vbCr
-    bigString = bigString & "    .Calculation = xlCalculationAutomatic" & vbCr
-    bigString = bigString & "    .EnableEvents = True" & vbCr
-    bigString = bigString & "    .Interactive = True" & vbCr
-    bigString = bigString & "    .DisplayAlerts = True" & vbCr
-    bigString = bigString & "End With" & vbCr
-    bigString = bigString & "Unload Me" & vbCr
-    bigString = bigString & "End Sub" & vbCr
-    bigString = bigString & "" & vbCr
-    bigString = bigString & "Private Sub btnHyperLink_Click()" & vbCr
-    bigString = bigString & "    On Error Resume Next" & vbCr
-    bigString = bigString & "    For Each c In Selection" & vbCr
-    bigString = bigString & "        Application.ActiveSheet.Hyperlinks.Add c, c.Value" & vbCr
-    bigString = bigString & "    Next" & vbCr
-    bigString = bigString & "    Unload Me" & vbCr
-    bigString = bigString & "End Sub" & vbCr
-    bigString = bigString & "" & vbCr
-    bigString = bigString & "Private Sub btnTextLink_Click()" & vbCr
-    bigString = bigString & "    For Each c In Selection" & vbCr
-    bigString = bigString & "        c.Hyperlinks.Delete" & vbCr
-    bigString = bigString & "    Next" & vbCr
-    bigString = bigString & "    Unload Me" & vbCr
-    bigString = bigString & "End Sub" & vbCr
-    bigString = bigString & "" & vbCr
-    bigString = bigString & "Private Sub btnClose_Click()" & vbCr
-    bigString = bigString & "    Unload Me" & vbCr
-    bigString = bigString & "End Sub" & vbCr
-    getBigString = bigString
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    Set file = FSO.opentextfile("C:\UsefulFunctionsSrc.txt", 1, 0)
+    getBigString = file.ReadAll()
 End Function
-

@@ -1,0 +1,101 @@
+Private WithEvents var As MSForms.CommandButton
+Private WithEvents btnTrimmer As MSForms.CommandButton
+Private WithEvents btnRestore As MSForms.CommandButton
+Private WithEvents btnHyperLink As MSForms.CommandButton
+Private WithEvents btnClose As MSForms.CommandButton
+Private WithEvents btnTextLink As MSForms.CommandButton
+Private WithEvents btnShSheets As MSForms.CommandButton
+
+Private Sub UserForm_Activate()
+    FunctionCombo.Height = (FunctionCombo.Controls.Count) * (btnTrimmer.Height)
+    FunctionCombo.Width = btnTrimmer.Width
+End Sub
+
+Private Sub UserForm_Initialize()
+    FunctionCombo.Caption = "UseFun"
+    
+    Set btnTrimmer = createBtn("btnTrim", "Trim selection", 0)
+    Set btnRestore = createBtn("btnRest", "Restore Blocks", 1)
+    Set btnHyperLink = createBtn("btnHyper", "Text to Link", 2)
+    Set btnTextLink = createBtn("btnText", "Link to Text", 3)
+    Set btnShSheets = createBtn("btnShSht", "Show all sheets", 4)
+    
+    Set btnClose = FunctionCombo.Controls.Add("Forms.CommandButton.1", "btnClose")
+    btnClose.Height = 0
+    btnClose.Width = 0
+    btnClose.Cancel = True
+    
+    btnTrimmer.SetFocus
+End Sub
+
+Private Function createBtn(name As String, cap As String, position As Integer) As MSForms.CommandButton
+    Set var = FunctionCombo.Controls.Add("Forms.CommandButton.1", name)
+    var.Caption = cap
+    var.Top = 24 * position
+    Set createBtn = var
+End Function
+
+Private Sub btnTrimmer_KeyDown(ByVal KeyCode As MSForms.ReturnInteger, ByVal Shift As Integer)
+Select Case KeyCode
+    Case 82:
+        btnRestore_Click
+    Case 84:
+        btnTrimmer_Click
+    Case 72:
+        btnHyperLink_Click
+    Case 88:
+        btnTextLink_Click
+End Select
+End Sub
+
+Private Sub btnTrimmer_Click()
+If Selection.Cells.Count > 1 Then
+    For Each c In Selection
+        If c.HasFormula = False Then c.Value = Application.WorksheetFunction.Trim(c)
+    Next
+Else
+    For Each c In ActiveSheet.UsedRange
+        If c.HasFormula = False Then c.Value = Application.WorksheetFunction.Trim(c)
+    Next
+End If
+Unload Me
+End Sub
+
+Private Sub btnRestore_Click()
+With Application
+    .ScreenUpdating = True
+    .Calculation = xlCalculationAutomatic
+    .EnableEvents = True
+    .Interactive = True
+    .DisplayAlerts = True
+End With
+Unload Me
+End Sub
+
+Private Sub btnHyperLink_Click()
+    On Error Resume Next
+    For Each c In Selection
+        Application.ActiveSheet.Hyperlinks.Add c, c.Value
+    Next
+    Unload Me
+End Sub
+
+Private Sub btnTextLink_Click()
+    For Each c In Selection
+        c.Hyperlinks.Delete
+    Next
+    Unload Me
+End Sub
+
+Private Sub btnShSheets_Click()
+For Each sh In ActiveWorkbook.Worksheets
+    sh.Visible = True
+Next
+Unload Me
+End Sub
+
+
+Private Sub btnClose_Click()
+    Unload Me
+End Sub
+

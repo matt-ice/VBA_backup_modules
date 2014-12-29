@@ -19,7 +19,8 @@ Sub FlipTab_core(Optional ByVal skipCount As Integer = 1, Optional ByVal directi
     If direction = True Then
         If shIndex + skipCount > shTotal Then
             shIndex = 0
-            skipCount = 1
+            'if skipCount is 1 then leave it like that, workaround for hidden first sheet (formerly crash)
+            If skipCount = 1 Then skipCount = 1
         End If
     End If
     
